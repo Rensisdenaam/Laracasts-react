@@ -1,6 +1,7 @@
 import {useState} from "react";
 import '../reset.css';
 import '../App.css';
+import NoTodos from './NoTodos';
 
 function App() {
   const [todos, setTodos] = useState([
@@ -102,76 +103,82 @@ function App() {
             placeholder="What do you need to do?"
           />
         </form>
+        { todos.length > 0 ? (
+          <>
+            <ul className="todo-list">
+              {todos.map((todo, index) => (
+                <li key={todo.id} className="todo-item-container">
+                  <div className="todo-item">
+                    <input type="checkbox" checked={todo.isComplete} onChange={() => completeTodo(todo.id)} />
 
-        <ul className="todo-list">
-          {todos.map((todo, index) => (
-            <li key={todo.id} className="todo-item-container">
-              <div className="todo-item">
-                <input type="checkbox" checked={todo.isComplete} onChange={() => completeTodo(todo.id)} />
+                    { !todo.isEditing ? (
+                    <span onDoubleClick={() => markAsEditing(todo.id)}
+                          className={`todo-item-label ${todo.isComplete ? 'line-through' : ''}`
+                    }>
+                      {todo.title}
+                    </span>
+                    ) : (
+                       <input autoFocus
+                              onKeyDown={ event => {
+                                if(event.key === 'Enter') {
+                                  updateTodo(event, todo.id);
+                                }
+                                else if(event.key === 'Escape') {
+                                  markAsEditing(todo.id);
+                                }
+                              }}
+                              onBlur={(event) => updateTodo(event, todo.id)}
+                              type="text"
+                              className="todo-item-input"
+                              defaultValue={todo.title}
+                       />
+                    )
+                    }
+                  </div>
+                  <button onClick={() => deleteTodo(todo.id)} className="x-button">
+                    <svg
+                      className="x-button-icon"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </li>
+              ))}
+            </ul>
 
-                { !todo.isEditing ? (
-                <span onDoubleClick={() => markAsEditing(todo.id)}
-                      className={`todo-item-label ${todo.isComplete ? 'line-through' : ''}`
-                }>
-                  {todo.title}
-                </span>
-                ) : (
-                   <input autoFocus
-                          onKeyDown={ event => {
-                            if(event.key === 'Enter') {
-                              updateTodo(event, todo.id);
-                            }
-                            else if(event.key === 'Escape') {
-                              markAsEditing(todo.id);
-                            }
-                          }}
-                          onBlur={(event) => updateTodo(event, todo.id)}
-                          type="text"
-                          className="todo-item-input"
-                          defaultValue={todo.title}
-                   />
-                )
-                }
+            <div className="check-all-container">
+              <div>
+                <div className="button" onClick={completeAllTodos}>Check All</div>
               </div>
-              <button className="x-button">
-                <svg
-                  className="x-button-icon"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </li>
-          ))}
-        </ul>
 
-        <div className="check-all-container">
-          <div>
-            <div className="button" onClick={completeAllTodos}>Check All</div>
-          </div>
+              <span>{todos.length} items remaining</span>
+            </div>
 
-          <span>{todos.length} items remaining</span>
-        </div>
-
-        <div className="other-buttons-container">
-          <div>
-            <button className="button filter-button filter-button-active">
-              All
-            </button>
-            <button className="button filter-button">Active</button>
-            <button className="button filter-button">Completed</button>
-          </div>
-          <div>
-            <button className="button">Clear completed</button>
-          </div>
-        </div>
+            <div className="other-buttons-container">
+              <div>
+                <button className="button filter-button filter-button-active">
+                  All
+                </button>
+                <button className="button filter-button">Active</button>
+                <button className="button filter-button">Completed</button>
+              </div>
+              <div>
+                <button className="button">Clear completed</button>
+              </div>
+            </div>
+          </>
+          ) : (
+            <NoTodos />
+          )
+        }
       </div>
     </div>
   );
