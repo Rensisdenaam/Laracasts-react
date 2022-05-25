@@ -7,17 +7,20 @@ function App() {
     {
       id: 1,
       title: 'Learn React',
-      isComplete: false
+      isComplete: false,
+      isEditing: false
     },
     {
       id: 2,
       title: 'Quack like a duck',
-      isComplete: false
+      isComplete: true,
+      isEditing: false
     },
     {
       id: 3,
       title: 'Run like a duck',
-      isComplete: false
+      isComplete: false,
+      isEditing: false
     },
 
   ]);
@@ -38,12 +41,52 @@ function App() {
     setTodoInput('');
   }
 
+  function deleteTodo(id) {
+    setTodos(todos.filter(todo => todo.id !== id));
+  }
+
   function handleInput(event) {
     setTodoInput(event.target.value);
   }
 
-  function deleteTodo(id) {
-    setTodos(todos.filter(todo => todo.id !== id));
+  function completeTodo(id) {
+    setTodos(todos.map(todo => {
+      if(todo.id === id) {
+        todo.isComplete = !todo.isComplete;
+      }
+      return todo;
+    }));
+  }
+
+  function markAsEditing(id) {
+    setTodos(todos.map(todo => {
+      if(todo.id === id) {
+        todo.isEditing = !todo.isEditing;
+      }
+      return todo;
+    }));
+  }
+
+  function updateTodo(event, id) {
+    setTodos(todos.map(todo => {
+      if(todo.id === id) {
+        if(event.target.value.trim() === '') {
+          todo.isEditing = false;
+          return todo;
+        }
+
+        todo.isEditing = !todo.isEditing;
+        todo.title = event.target.value;
+      }
+      return todo;
+    }));
+  }
+
+  function completeAllTodos() {
+    setTodos(todos.map(todo => {
+      todo.isComplete = true;
+      return todo;
+    }));
   }
 
   return (
@@ -64,12 +107,33 @@ function App() {
           {todos.map((todo, index) => (
             <li key={todo.id} className="todo-item-container">
               <div className="todo-item">
-                <input type="checkbox" />
-                <span className="todo-item-label">{todo.id}</span>
-                <span className="todo-item-label">{todo.title}</span>
-                {/* <input type="text" className="todo-item-input" value="Finish React Series" /> */}
+                <input type="checkbox" checked={todo.isComplete} onChange={() => completeTodo(todo.id)} />
+
+                { !todo.isEditing ? (
+                <span onDoubleClick={() => markAsEditing(todo.id)}
+                      className={`todo-item-label ${todo.isComplete ? 'line-through' : ''}`
+                }>
+                  {todo.title}
+                </span>
+                ) : (
+                   <input autoFocus
+                          onKeyDown={ event => {
+                            if(event.key === 'Enter') {
+                              updateTodo(event, todo.id);
+                            }
+                            else if(event.key === 'Escape') {
+                              markAsEditing(todo.id);
+                            }
+                          }}
+                          onBlur={(event) => updateTodo(event, todo.id)}
+                          type="text"
+                          className="todo-item-input"
+                          defaultValue={todo.title}
+                   />
+                )
+                }
               </div>
-              <button onClick={() => deleteTodo(todo.id)} className="x-button">
+              <button className="x-button">
                 <svg
                   className="x-button-icon"
                   fill="none"
@@ -90,10 +154,10 @@ function App() {
 
         <div className="check-all-container">
           <div>
-            <div className="button">Check All</div>
+            <div className="button" onClick={completeAllTodos}>Check All</div>
           </div>
 
-          <span>3 items remaining</span>
+          <span>{todos.length} items remaining</span>
         </div>
 
         <div className="other-buttons-container">
