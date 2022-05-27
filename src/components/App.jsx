@@ -86,6 +86,10 @@ function App() {
     }));
   }
 
+  function remaining() {
+    return todos.filter(todo => !todo.isComplete).length;
+  }
+
   return (
     <div className="todo-app-container">
       <div className="todo-app">
@@ -99,6 +103,7 @@ function App() {
                 updateTodo={updateTodo}
                 cancelEditing={markAsEditing}
                 deleteTodo={deleteTodo}
+                remaining={remaining}
 
                 completeAllTodos={completeAllTodos}
             /> : <NoTodos /> }
