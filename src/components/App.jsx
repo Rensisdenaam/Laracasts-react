@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import '../reset.css';
 import '../App.css';
 import NoTodos from './NoTodos';
@@ -6,6 +6,8 @@ import TodoForm from './TodoForm';
 import TodoList from './TodoList';
 
 function App() {
+  const [name, setName] = useState('');
+  const nameInputEl = useRef(null);
   const [todos, setTodos] = useState([
     {
       id: 1,
@@ -105,9 +107,27 @@ function App() {
     }
   }
 
+  useEffect(() => {
+    nameInputEl.current.focus();
+  }, []);
+
   return (
     <div className="todo-app-container">
       <div className="todo-app">
+        <div className="name-container">
+          <h2>What is your name</h2>
+          <form>
+            <input
+                type="text"
+                placeholder="Enter your name"
+                className="todo-input"
+                value={name}
+                ref={nameInputEl}
+                onChange={event => setName(event.target.value)}
+            />
+          </form>
+          {name && <p className="name-label">Hello, {name}</p>}
+        </div>
         <h2>Todo App</h2>
         <TodoForm addTodo={addTodo} />
         { todos.length > 0 ?

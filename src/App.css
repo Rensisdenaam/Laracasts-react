@@ -148,3 +148,11 @@ no-todos-container {
   margin-top: 16px;
   text-align: center;
 }
+
+.name-container {
+  margin-bottom: 40px;
+}
+
+.name-label {
+  margin-top: 16px;
+}
