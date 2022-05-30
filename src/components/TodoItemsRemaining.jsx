@@ -1,6 +1,15 @@
-function TodoItemsRemaining(props) {
+import {useContext, useMemo} from "react";
+import {TodosContext} from "../context/TodosContext";
+
+function TodoItemsRemaining() {
+    const { todos } = useContext(TodosContext);
+    function remainingCalculation() {
+        return todos.filter(todo => !todo.isComplete).length;
+    }
+
+    const remaining = useMemo(remainingCalculation, [todos]);
     return (
-        <span>{props.remaining()} items remaining</span>
+        <span>{remaining} items remaining</span>
     );
 }
 
