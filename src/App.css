@@ -156,3 +156,43 @@ no-todos-container {
 .name-label {
   margin-top: 16px;
 }
+
+.slide-vertical-enter {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.slide-vertical-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s ease-in-out;
+}
+.slide-vertical-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.slide-vertical-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.3s ease-in-out;
+}
+
+.slide-horizontal-enter {
+  opacity: 0;
+  transform: translateX(20px);
+}
+.slide-horizontal-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.3s ease-in-out;
+}
+.slide-horizontal-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+.slide-horizontal-exit-active {
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.3s ease-in-out;
+}
